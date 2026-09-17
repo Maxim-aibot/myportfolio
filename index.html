@@ -1124,8 +1124,8 @@ footer{
 <span class="code-line"><span class="tok-kw">if</span> __name__ == <span class="tok-str">"__main__"</span>:</span>
 <span class="code-line">    asyncio.run(main())</span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-com"># запуск: python bot.py</span></span>
-<span class="code-line"><span class="tok-com"># бот начнёт отвечать в Telegram</span></span></div>
+<span class="code-line"><span class="tok-com"></span></span>
+<span class="code-line"><span class="tok-com"></span></span></div>
             <div class="code-file" data-file="handlers" style="display:none"><span class="code-line"><span class="tok-kw">from</span> aiogram <span class="tok-kw">import</span> Router, types</span>
 <span class="code-line"><span class="tok-kw">from</span> aiogram.filters <span class="tok-kw">import</span> Command</span>
 <span class="code-line"></span>
@@ -1135,7 +1135,7 @@ footer{
 <span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">start_handler</span>(msg: types.Message):</span>
 <span class="code-line">    <span class="tok-kw">await</span> msg.answer(</span>
 <span class="code-line">        <span class="tok-str">"Привет! Помогу"</span></span>
-<span class="code-line">        <span class="tok-str">"с бронированием ☕️"</span></span>
+<span class="code-line">        <span class="tok-str">"с бронированием"</span></span>
 <span class="code-line">    )</span>
 <span class="code-line"></span>
 <span class="code-line"><span class="tok-dec">@router.message</span>(Command(<span class="tok-str">"book"</span>))</span>
@@ -1165,8 +1165,8 @@ footer{
 <span class="code-line"></span>
 <span class="code-line">SLOT_STEP_MIN = <span class="tok-num">30</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-com"># переменные окружения</span></span>
-<span class="code-line"><span class="tok-com"># задаются на сервере</span></span></div>
+<span class="code-line"><span class="tok-com"></span></span>
+<span class="code-line"><span class="tok-com"></span></span></div>
           </div>
           <div class="code-cursor"></div>
         </div>
@@ -1303,6 +1303,7 @@ footer{
       <button class="btn btn-ghost" data-target="contact">Обсудить проект</button>
     </div>
   </div>
+  <div class="hero-scroll hero-anim" style="animation-delay:.1000000000s"><span class="scroll-line"></span></div>
 </section>
  
 <!-- WORK -->
