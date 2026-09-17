@@ -217,9 +217,6 @@ h1,h2,h3,p{margin:0;}
   box-shadow:var(--shadow-glass), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .dock-indicator{
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
   position:absolute;
   top:0;
   left:0;
@@ -522,7 +519,6 @@ h1,h2,h3,p{margin:0;}
 .tok-def{color:#e9f1f8;}
 .tok-dec{color:#e39a5c;}
 .code-cursor{
-  display: none;
   position:absolute;
   bottom:18px;
   left:16px;
@@ -538,8 +534,7 @@ h1,h2,h3,p{margin:0;}
   flex:1;
   overflow:hidden;
   position:relative;
-  background: var(--bg-0);
-  color: var(--ink) !important;
+  background:#eef3f7;
 }
 :root[data-theme="dark"] .site-body{background:#16222e;}
 .site-scroll{
@@ -1075,6 +1070,7 @@ footer{
  
 <!-- NAV DOCK -->
 <nav class="dock" aria-label="Навигация по разделам сайта">
+  <span class="dock-indicator" id="dockIndicator"></span>
   <button class="dock-item" data-target="hero" aria-label="Главная">
     <svg class="dock-icon" viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
     <span class="dock-label">Главная</span>
@@ -1101,7 +1097,7 @@ footer{
 <div class="side-panel side-panel-left" id="codePanel">
   <div class="panel-tilt" id="codeTilt">
     <div class="panel-scale">
-      <div class="panel-window" id="codeWindow" tabindex="0" aria-label="Пример кода Telegram-бота, кликните вкладки, чтобы переключить файл" style="background: var(--bg-0) !important; background-image: none !important; box-shadow: none !important;">
+      <div class="panel-window" id="codeWindow" tabindex="0" aria-label="Пример кода Telegram-бота, кликните вкладки, чтобы переключить файл">
         <div class="panel-titlebar">
           <span class="tl-dot r"></span><span class="tl-dot y"></span><span class="tl-dot g"></span>
           <span class="panel-filename">проект бота</span>
@@ -1111,7 +1107,7 @@ footer{
           <button class="panel-tab" data-file="handlers">handlers.py</button>
           <button class="panel-tab" data-file="config">config.py</button>
         </div>
-        <div class="code-body" style="color: var(--ink);">
+        <div class="code-body">
           <div class="code-scroll" id="codeScroll">
             <div class="code-file" data-file="bot"><span class="code-line"><span class="tok-kw">import</span> asyncio</span>
 <span class="code-line"><span class="tok-kw">from</span> aiogram <span class="tok-kw">import</span> Bot, Dispatcher</span>
@@ -1128,8 +1124,8 @@ footer{
 <span class="code-line"><span class="tok-kw">if</span> __name__ == <span class="tok-str">"__main__"</span>:</span>
 <span class="code-line">    asyncio.run(main())</span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-com"></span></span>
-<span class="code-line"><span class="tok-com"></span></span></div>
+<span class="code-line"><span class="tok-com"># запуск: python bot.py</span></span>
+<span class="code-line"><span class="tok-com"># бот начнёт отвечать в Telegram</span></span></div>
             <div class="code-file" data-file="handlers" style="display:none"><span class="code-line"><span class="tok-kw">from</span> aiogram <span class="tok-kw">import</span> Router, types</span>
 <span class="code-line"><span class="tok-kw">from</span> aiogram.filters <span class="tok-kw">import</span> Command</span>
 <span class="code-line"></span>
@@ -1139,7 +1135,7 @@ footer{
 <span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">start_handler</span>(msg: types.Message):</span>
 <span class="code-line">    <span class="tok-kw">await</span> msg.answer(</span>
 <span class="code-line">        <span class="tok-str">"Привет! Помогу"</span></span>
-<span class="code-line">        <span class="tok-str">"с бронированием"</span></span>
+<span class="code-line">        <span class="tok-str">"с бронированием ☕️"</span></span>
 <span class="code-line">    )</span>
 <span class="code-line"></span>
 <span class="code-line"><span class="tok-dec">@router.message</span>(Command(<span class="tok-str">"book"</span>))</span>
@@ -1169,8 +1165,8 @@ footer{
 <span class="code-line"></span>
 <span class="code-line">SLOT_STEP_MIN = <span class="tok-num">30</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-com"></span></span>
-<span class="code-line"><span class="tok-com"></span></span></div>
+<span class="code-line"><span class="tok-com"># переменные окружения</span></span>
+<span class="code-line"><span class="tok-com"># задаются на сервере</span></span></div>
           </div>
           <div class="code-cursor"></div>
         </div>
@@ -1307,7 +1303,6 @@ footer{
       <button class="btn btn-ghost" data-target="contact">Обсудить проект</button>
     </div>
   </div>
-  <div class="hero-scroll hero-anim" style="animation-delay:.1000000000s"><span class="scroll-line"></span></div>
 </section>
  
 <!-- WORK -->
