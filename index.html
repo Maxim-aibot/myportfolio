@@ -8,15 +8,14 @@
  
 /* ============ TOKENS ============ */
 :root{
-  --bg-0:#F9F6F0;
-  --bg-1:#F3EDE2;
+  --bg-0:#d9e5e0;
+  --bg-1:#c6dbd4;
   --glass:rgba(255,255,255,0.58);
   --glass-strong:rgba(255,255,255,0.80);
   --glass-border:rgba(16,40,34,0.14);
-  --ink:#1C1A17;
-  --ink-soft:#504B43;
-  --code-text: #1e1e1e;
-  --ink-faint:#867F74;
+  --ink:#0f1c19;
+  --ink-soft:#3c524c;
+  --ink-faint:#6c8580;
   --accent:#0F9A7D;
   --accent-2:#3F8FE0;
   --accent-3:#5CD9BE;
@@ -39,7 +38,6 @@
   --ink:#2FD6B5;
   --ink-soft:#8fc4b9;
   --ink-faint:#5c7a73;
-  --code-text: #ffffff;
   --accent:#2FD6B5;
   --accent-2:#4FA6E0;
   --accent-3:#6EE7C0;
@@ -512,7 +510,7 @@ h1,h2,h3,p{margin:0;}
   will-change:transform;
   transition:opacity .25s ease;
 }
-.code-line{white-space:pre;display:block;color: var(--code-text);}
+.code-line{white-space:pre;display:block;}
 .tok-kw{color:#c586f0;}
 .tok-fn{color:#7fc6ff;}
 .tok-str{color:#95d68a;}
@@ -521,7 +519,6 @@ h1,h2,h3,p{margin:0;}
 .tok-def{color:#e9f1f8;}
 .tok-dec{color:#e39a5c;}
 .code-cursor{
-  display: none;
   position:absolute;
   bottom:18px;
   left:16px;
@@ -538,7 +535,6 @@ h1,h2,h3,p{margin:0;}
   overflow:hidden;
   position:relative;
   background:#eef3f7;
-  color: var(--code-text);
 }
 :root[data-theme="dark"] .site-body{background:#16222e;}
 .site-scroll{
@@ -1307,7 +1303,6 @@ footer{
       <button class="btn btn-ghost" data-target="contact">Обсудить проект</button>
     </div>
   </div>
-  <div class="hero-scroll hero-anim" style="animation-delay:.6s"><span class="scroll-line"></span> Листайте вниз</div>
 </section>
  
 <!-- WORK -->
