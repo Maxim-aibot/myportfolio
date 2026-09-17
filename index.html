@@ -3,26 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Боты и сайты на заказ - портфолио разработчика</title>
+<title>Боты и сайты на заказ — портфолио разработчика</title>
 <style>
  
 /* ============ TOKENS ============ */
 :root{
-  --bg-0:#eef2f1;
-  --bg-1:#e2ebe9;
-  --glass:rgba(255,255,255,0.40);
-  --glass-strong:rgba(255,255,255,0.60);
-  --glass-border:rgba(255,255,255,0.55);
-  --ink:#16221f;
-  --ink-soft:#4a5f5a;
-  --ink-faint:#7c9490;
-  --accent:#14A98D;
+  --bg-0:#d9e5e0;
+  --bg-1:#c6dbd4;
+  --glass:rgba(255,255,255,0.58);
+  --glass-strong:rgba(255,255,255,0.80);
+  --glass-border:rgba(16,40,34,0.14);
+  --ink:#0f1c19;
+  --ink-soft:#3c524c;
+  --code-text: #1e1e1e;
+  --ink-faint:#6c8580;
+  --accent:#0F9A7D;
   --accent-2:#3F8FE0;
   --accent-3:#5CD9BE;
-  --accent-rgb:20,169,141;
+  --accent-rgb:15,154,125;
   --accent2-rgb:63,143,224;
-  --shadow-glass:0 8px 32px rgba(20,45,66,0.16);
-  --blob-opacity:0.38;
+  --shadow-glass:0 10px 34px rgba(13,38,32,0.20);
+  --blob-opacity:0.30;
   --radius-lg:28px;
   --radius-md:20px;
   --radius-sm:14px;
@@ -38,6 +39,7 @@
   --ink:#2FD6B5;
   --ink-soft:#8fc4b9;
   --ink-faint:#5c7a73;
+  --code-text: #ffffff;
   --accent:#2FD6B5;
   --accent-2:#4FA6E0;
   --accent-3:#6EE7C0;
@@ -59,7 +61,7 @@ body{
   transition:background .5s ease, color .5s ease;
 }
  
-::selection{background:rgba(40,168,234,0.25);}
+::selection{background:rgba(var(--accent-rgb),0.28);}
  
 :focus-visible{
   outline:2.5px solid var(--accent);
@@ -130,18 +132,72 @@ h1,h2,h3,p{margin:0;}
  
 @media (prefers-reduced-motion:reduce){
   .blob{animation:none !important;}
+  .dock-indicator{transition:opacity .3s ease;}
   html{scroll-behavior:auto;}
 }
  
-/* ============ GLASS PANEL BASE ============ */
+/* ============ GLASS PANEL BASE (liquid glass) ============ */
 .glass{
+  position:relative;
   background:var(--glass);
-  backdrop-filter:blur(22px) saturate(160%);
-  -webkit-backdrop-filter:blur(22px) saturate(160%);
+  backdrop-filter:blur(28px) saturate(190%) brightness(1.05) contrast(1.04);
+  -webkit-backdrop-filter:blur(28px) saturate(190%) brightness(1.05) contrast(1.04);
   border:1px solid var(--glass-border);
   border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-glass);
+  box-shadow:
+    var(--shadow-glass),
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(255,255,255,0.06);
+  overflow:hidden;
+  isolation:isolate;
   transition:background .5s ease, border-color .5s ease, box-shadow .5s ease;
+}
+:root[data-theme="dark"] .glass{
+  box-shadow:
+    var(--shadow-glass),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.3);
+}
+.glass::before{
+  content:'';
+  position:absolute;
+  inset:-45%;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(125deg,
+    rgba(255,255,255,0.38) 0%,
+    rgba(255,255,255,0.08) 20%,
+    rgba(255,255,255,0) 40%,
+    rgba(255,255,255,0) 65%,
+    rgba(255,255,255,0.18) 100%);
+  mix-blend-mode:overlay;
+  animation:glassSheen 10s ease-in-out infinite alternate;
+}
+:root[data-theme="dark"] .glass::before{
+  background:linear-gradient(125deg,
+    rgba(255,255,255,0.16) 0%,
+    rgba(255,255,255,0.04) 20%,
+    rgba(255,255,255,0) 40%,
+    rgba(255,255,255,0) 65%,
+    rgba(255,255,255,0.08) 100%);
+}
+@keyframes glassSheen{
+  0%{transform:translate(-5%,-3%) rotate(0deg);}
+  100%{transform:translate(5%,3%) rotate(3deg);}
+}
+.glass::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  filter:url(#glassGrain);
+  opacity:0.4;
+  mix-blend-mode:overlay;
+}
+.glass > *{position:relative;z-index:1;}
+@media (prefers-reduced-motion:reduce){
+  .glass::before{animation:none;}
 }
  
 /* ============ NAV DOCK ============ */
@@ -153,39 +209,59 @@ h1,h2,h3,p{margin:0;}
   transform:translateY(-50%);
   display:flex;
   flex-direction:column;
-  gap:6px;
-  padding:10px;
+  gap:4px;
+  padding:8px;
   background:var(--glass-strong);
   backdrop-filter:blur(26px) saturate(180%);
   -webkit-backdrop-filter:blur(26px) saturate(180%);
   border:1px solid var(--glass-border);
   border-radius:999px;
-  box-shadow:var(--shadow-glass);
+  box-shadow:var(--shadow-glass), inset 0 1px 0 rgba(255,255,255,0.4);
 }
+.dock-indicator{
+  position:absolute;
+  top:0;
+  left:0;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:radial-gradient(circle at 32% 28%, rgba(var(--accent-rgb),0.30), rgba(var(--accent-rgb),0.13) 72%);
+  pointer-events:none;
+  z-index:0;
+  opacity:0;
+  transition:transform .5s cubic-bezier(.34,1.4,.4,1), opacity .3s ease, width .35s ease, height .35s ease;
+  will-change:transform;
+}
+.dock-indicator.ready{opacity:1;}
 .dock-item{
   position:relative;
+  z-index:1;
   display:flex;
   align-items:center;
   justify-content:center;
-  width:42px;
-  height:42px;
+  width:44px;
+  height:44px;
   border-radius:50%;
   background:transparent;
   border:none;
   cursor:pointer;
-  transition:background .25s ease;
+  transition:background .3s ease;
 }
-.dock-item:hover{background:rgba(255,255,255,0.5);}
-.dock-dot{
-  width:8px;height:8px;
-  border-radius:50%;
-  background:var(--ink-faint);
-  transition:all .3s ease;
+.dock-item:hover{background:rgba(var(--accent-rgb),0.08);}
+.dock-icon{
+  width:19px;
+  height:19px;
+  stroke:var(--ink-faint);
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  transition:stroke .3s ease, transform .3s ease;
 }
-.dock-item.active .dock-dot{
-  background:var(--accent);
-  width:10px;height:10px;
-  box-shadow:0 0 0 5px rgba(40,168,234,0.18);
+.dock-item:hover .dock-icon{stroke:var(--ink-soft);}
+.dock-item.active .dock-icon{
+  stroke:var(--accent);
+  transform:scale(1.08);
 }
 .dock-label{
   position:absolute;
@@ -212,47 +288,61 @@ h1,h2,h3,p{margin:0;}
   transform:translateY(-50%) translateX(0);
 }
  
-/* ============ THEME TOGGLE ============ */
+/* ============ THEME TOGGLE (iOS-style switch) ============ */
 .theme-toggle{
   position:fixed;
   z-index:50;
-  top:24px;
+  top:26px;
   right:28px;
-  width:52px;
-  height:52px;
-  border-radius:50%;
+  width:58px;
+  height:32px;
+  padding:3px;
+  border-radius:999px;
   border:1px solid var(--glass-border);
   background:var(--glass-strong);
   backdrop-filter:blur(24px) saturate(180%);
   -webkit-backdrop-filter:blur(24px) saturate(180%);
-  box-shadow:var(--shadow-glass);
+  box-shadow:var(--shadow-glass), inset 0 1px 2px rgba(0,0,0,0.06);
   cursor:pointer;
   display:flex;
   align-items:center;
+  transition:background .45s ease, border-color .45s ease;
+}
+:root[data-theme="dark"] .theme-toggle{
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));
+  border-color:transparent;
+  box-shadow:var(--shadow-glass), inset 0 1px 2px rgba(0,0,0,0.15);
+}
+.theme-toggle:active .toggle-knob{width:28px;}
+.toggle-knob{
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 5px rgba(0,0,0,0.28), 0 0 0 0.5px rgba(0,0,0,0.04);
+  display:flex;
+  align-items:center;
   justify-content:center;
-  overflow:hidden;
-  transition:background .5s ease, border-color .5s ease, transform .3s ease;
+  transform:translateX(0);
+  transition:transform .45s cubic-bezier(.2,.85,.25,1), width .2s ease;
 }
-.theme-toggle:hover{transform:translateY(-2px) scale(1.04);}
-.theme-toggle:active{transform:scale(0.92);}
-.theme-toggle svg{
-  width:22px;
-  height:22px;
-  stroke:var(--ink);
+:root[data-theme="dark"] .toggle-knob{transform:translateX(24px);}
+.toggle-knob svg{
+  width:13px;
+  height:13px;
   position:absolute;
-  transition:opacity .4s ease, transform .5s ease;
+  stroke:#e8a53d;
+  transition:opacity .3s ease, transform .4s ease;
 }
-.icon-sun{opacity:1;transform:rotate(0deg) scale(1);}
-.icon-moon{opacity:0;transform:rotate(-90deg) scale(0.5);}
-:root[data-theme="dark"] .icon-sun{opacity:0;transform:rotate(90deg) scale(0.5);}
-:root[data-theme="dark"] .icon-moon{opacity:1;transform:rotate(0deg) scale(1);}
+.toggle-knob .icon-moon{stroke:#5b6bcf;opacity:0;transform:rotate(-70deg) scale(.5);}
+.toggle-knob .icon-sun{opacity:1;transform:rotate(0) scale(1);}
+:root[data-theme="dark"] .toggle-knob .icon-sun{opacity:0;transform:rotate(70deg) scale(.5);}
+:root[data-theme="dark"] .toggle-knob .icon-moon{opacity:1;transform:rotate(0) scale(1);}
  
 @media (max-width:820px){
   .theme-toggle{
     top:18px;
     right:18px;
-    width:46px;
-    height:46px;
   }
   .dock{
     right:50%;
@@ -278,45 +368,75 @@ h1,h2,h3,p{margin:0;}
 .side-panel{
   position:fixed;
   top:50%;
-  width:230px;
-  height:440px;
+  width:114px;
+  height:216px;
   z-index:2;
-  pointer-events:none;
   opacity:0;
   display:none;
-  transition:opacity .9s ease, transform .9s ease;
+  overflow:hidden;
+  border-radius:16px;
+  perspective:900px;
+  transition:opacity .9s ease, transform .9s ease, width .4s ease, height .4s ease;
 }
-@media (min-width:1680px){
+@media (min-width:1024px){
   .side-panel{display:block;}
+  .wrap{max-width:740px;}
+}
+@media (min-width:1700px){
+  .side-panel{width:230px;height:440px;}
+  .wrap{max-width:1120px;}
 }
 .side-panel-left{
-  left:110px;
-  transform:translateY(-50%) translateX(-18px) rotate(-2deg);
+  left:14px;
+  transform:translateY(-50%) translateX(-16px) rotate(-2deg);
 }
 .side-panel-left.in{
   opacity:1;
   transform:translateY(-50%) translateX(0) rotate(-2deg);
 }
 .side-panel-right{
-  right:110px;
-  transform:translateY(-50%) translateX(18px) rotate(2deg);
+  right:14px;
+  transform:translateY(-50%) translateX(16px) rotate(2deg);
 }
 .side-panel-right.in{
   opacity:1;
   transform:translateY(-50%) translateX(0) rotate(2deg);
 }
-.panel-window{
+@media (min-width:1700px){
+  .side-panel-left{left:36px;}
+  .side-panel-right{right:36px;}
+}
+.panel-tilt{
   width:100%;
   height:100%;
+  transform-style:preserve-3d;
+  transition:transform .35s cubic-bezier(.2,.7,.3,1);
+  will-change:transform;
+}
+.panel-scale{
+  width:230px;
+  height:440px;
+  transform:scale(0.4957);
+  transform-origin:top left;
+}
+@media (min-width:1700px){
+  .panel-scale{transform:scale(1);}
+}
+.panel-window{
+  position:relative;
+  width:230px;
+  height:440px;
   border-radius:16px;
   overflow:hidden;
   background:var(--glass-strong);
   border:1px solid var(--glass-border);
   backdrop-filter:blur(20px) saturate(160%);
   -webkit-backdrop-filter:blur(20px) saturate(160%);
-  box-shadow:var(--shadow-glass);
+  box-shadow:var(--shadow-glass), inset 0 1px 0 rgba(255,255,255,0.35);
   display:flex;
   flex-direction:column;
+  cursor:pointer;
+  pointer-events:auto;
   transition:background .5s ease, border-color .5s ease;
 }
 .panel-titlebar{
@@ -344,6 +464,37 @@ h1,h2,h3,p{margin:0;}
   text-overflow:ellipsis;
 }
  
+/* ---- panel tabs (interactive) ---- */
+.panel-tabs{
+  display:flex;
+  gap:4px;
+  padding:8px 10px 0;
+  flex-shrink:0;
+  pointer-events:auto;
+}
+.panel-tab{
+  font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  font-size:10px;
+  font-weight:600;
+  padding:5px 9px;
+  border-radius:7px 7px 0 0;
+  border:none;
+  background:transparent;
+  color:var(--ink-faint);
+  cursor:pointer;
+  transition:background .25s ease, color .25s ease;
+}
+.panel-tab:hover{color:var(--ink-soft);}
+.panel-tab.active{
+  background:var(--code-tab-active,#111820);
+  color:#e9f1f8;
+}
+.site-panel-tabs .panel-tab.active{
+  background:var(--site-tab-active,#eef3f7);
+  color:var(--ink);
+}
+:root[data-theme="dark"] .site-panel-tabs .panel-tab.active{--site-tab-active:#16222e;}
+ 
 /* ---- code editor mockup ---- */
 .code-body{
   flex:1;
@@ -354,13 +505,14 @@ h1,h2,h3,p{margin:0;}
 .code-scroll{
   position:absolute;
   left:0;right:0;top:0;
-  padding:16px 14px 200px;
+  padding:14px 14px 40px;
   font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
   font-size:10.5px;
   line-height:1.85;
   will-change:transform;
+  transition:opacity .25s ease;
 }
-.code-line{white-space:pre;}
+.code-line{white-space:pre;display:block;color: var(--code-text);}
 .tok-kw{color:#c586f0;}
 .tok-fn{color:#7fc6ff;}
 .tok-str{color:#95d68a;}
@@ -369,12 +521,13 @@ h1,h2,h3,p{margin:0;}
 .tok-def{color:#e9f1f8;}
 .tok-dec{color:#e39a5c;}
 .code-cursor{
+  display: none;
   position:absolute;
   bottom:18px;
   left:16px;
   width:6px;
   height:13px;
-  background:#3cb6f0;
+  background:var(--accent);
   animation:blink 1s steps(1) infinite;
 }
 @keyframes blink{50%{opacity:0;}}
@@ -390,12 +543,13 @@ h1,h2,h3,p{margin:0;}
 .site-scroll{
   position:absolute;
   left:0;right:0;top:0;
-  padding:14px;
-  padding-bottom:200px;
+  padding:12px;
+  padding-bottom:40px;
   will-change:transform;
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:9px;
+  transition:opacity .25s ease;
 }
 .skel{
   border-radius:7px;
@@ -411,12 +565,63 @@ h1,h2,h3,p{margin:0;}
   0%{background-position:200% 0;}
   100%{background-position:-200% 0;}
 }
+.mock-label{
+  font-family:'Inter',-apple-system,sans-serif;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.3;
+}
+.mock-sub{
+  font-family:'Inter',-apple-system,sans-serif;
+  font-weight:500;
+  color:var(--ink-soft);
+  line-height:1.4;
+}
+.mock-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Inter',-apple-system,sans-serif;
+  font-weight:700;
+  color:#fff;
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));
+  border-radius:999px;
+}
+.mock-card{
+  border-radius:10px;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
+}
+.mock-chip{
+  border-radius:999px;
+  background:rgba(var(--accent-rgb),0.14);
+  color:var(--accent);
+  font-family:'Inter',-apple-system,sans-serif;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.mock-input{
+  border-radius:8px;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  display:flex;
+  align-items:center;
+  font-family:'Inter',-apple-system,sans-serif;
+  color:var(--ink-faint);
+}
 .site-cursor{
   position:absolute;
   width:15px;
   z-index:3;
   animation:cursorMove 7s ease-in-out infinite;
   filter:drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+  pointer-events:none;
 }
 @keyframes cursorMove{
   0%{transform:translate(40px,50px);}
@@ -426,8 +631,13 @@ h1,h2,h3,p{margin:0;}
   100%{transform:translate(40px,50px);}
 }
  
+.site-cursor path{fill:var(--accent);transition:fill .5s ease;}
+@media (hover:none){
+  .site-cursor{display:none;}
+}
 @media (prefers-reduced-motion:reduce){
   .code-cursor,.skel,.site-cursor{animation:none !important;}
+  .panel-tilt{transition:none;}
 }
 section{
   position:relative;
@@ -524,10 +734,10 @@ section{
   background-size:220% 100%;
   background-position:0% 50%;
   color:#fff;
-  box-shadow:0 10px 28px rgba(40,168,234,0.35);
+  box-shadow:0 10px 28px rgba(var(--accent-rgb),0.35);
 }
 .btn-primary:hover{
-  box-shadow:0 14px 34px rgba(40,168,234,0.45);
+  box-shadow:0 14px 34px rgba(var(--accent-rgb),0.45);
   background-position:100% 50%;
   transition:background-position .6s ease, transform .2s ease, box-shadow .2s ease;
 }
@@ -596,7 +806,7 @@ section{
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg,rgba(40,168,234,0.18),rgba(123,147,247,0.18));
+  background:linear-gradient(135deg,rgba(var(--accent-rgb),0.18),rgba(var(--accent2-rgb),0.18));
   font-size:24px;
   animation:iconFloat 5s ease-in-out infinite;
 }
@@ -835,71 +1045,103 @@ footer{
 </head>
 <body>
  
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="glassGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0"/>
+  </filter>
+</svg>
+ 
 <div class="liquid-bg">
   <div class="blob blob-a"></div>
   <div class="blob blob-b"></div>
   <div class="blob blob-c"></div>
 </div>
  
-<!-- THEME TOGGLE -->
-<button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
-  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="4.5"/>
-    <path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/>
-  </svg>
-  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/>
-  </svg>
+<!-- THEME TOGGLE (iOS-style switch) -->
+<button class="theme-toggle" id="themeToggle" aria-label="Переключить тему" role="switch" aria-checked="false">
+  <span class="toggle-knob">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4.5"/>
+      <path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/>
+    </svg>
+  </span>
 </button>
  
 <!-- NAV DOCK -->
 <nav class="dock" aria-label="Навигация по разделам сайта">
+  <span class="dock-indicator" id="dockIndicator"></span>
   <button class="dock-item" data-target="hero" aria-label="Главная">
-    <span class="dock-dot"></span>
+    <svg class="dock-icon" viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
     <span class="dock-label">Главная</span>
   </button>
   <button class="dock-item" data-target="work" aria-label="Что я делаю">
-    <span class="dock-dot"></span>
+    <svg class="dock-icon" viewBox="0 0 24 24"><path d="M9 8 4.5 12 9 16"/><path d="M15 8l4.5 4-4.5 4"/></svg>
     <span class="dock-label">Что я делаю</span>
   </button>
   <button class="dock-item" data-target="process" aria-label="Процесс работы">
-    <span class="dock-dot"></span>
+    <svg class="dock-icon" viewBox="0 0 24 24"><circle cx="5" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><circle cx="19" cy="7" r="2"/><path d="M7 8l3 7M17 8l-3 7"/></svg>
     <span class="dock-label">Процесс работы</span>
   </button>
   <button class="dock-item" data-target="reviews" aria-label="Отзывы">
-    <span class="dock-dot"></span>
+    <svg class="dock-icon" viewBox="0 0 24 24"><path d="M4 5h16v10H8l-4 4V5z"/></svg>
     <span class="dock-label">Отзывы</span>
   </button>
   <button class="dock-item" data-target="contact" aria-label="Связаться">
-    <span class="dock-dot"></span>
+    <svg class="dock-icon" viewBox="0 0 24 24"><path d="M21 4 3 11l6.5 2.5M21 4l-7 17-4.5-7.5M21 4 9.5 13.5"/></svg>
     <span class="dock-label">Связаться</span>
   </button>
 </nav>
  
-<!-- LEFT SIDE PANEL - TELEGRAM BOT CODE -->
+<!-- LEFT SIDE PANEL — TELEGRAM BOT CODE (interactive, tabbed) -->
 <div class="side-panel side-panel-left" id="codePanel">
-  <div class="panel-window">
-    <div class="panel-titlebar">
-      <span class="tl-dot r"></span><span class="tl-dot y"></span><span class="tl-dot g"></span>
-      <span class="panel-filename">bot.py</span>
-    </div>
-    <div class="code-body">
-      <div class="code-scroll" id="codeScroll"><span class="code-line"><span class="tok-kw">import</span> asyncio</span>
-<span class="code-line"><span class="tok-kw">from</span> aiogram <span class="tok-kw">import</span> Bot, Dispatcher, types</span>
+  <div class="panel-tilt" id="codeTilt">
+    <div class="panel-scale">
+      <div class="panel-window" id="codeWindow" tabindex="0" aria-label="Пример кода Telegram-бота, кликните вкладки, чтобы переключить файл">
+        <div class="panel-titlebar">
+          <span class="tl-dot r"></span><span class="tl-dot y"></span><span class="tl-dot g"></span>
+          <span class="panel-filename">проект бота</span>
+        </div>
+        <div class="panel-tabs" id="codeTabs">
+          <button class="panel-tab active" data-file="bot">bot.py</button>
+          <button class="panel-tab" data-file="handlers">handlers.py</button>
+          <button class="panel-tab" data-file="config">config.py</button>
+        </div>
+        <div class="code-body">
+          <div class="code-scroll" id="codeScroll">
+            <div class="code-file" data-file="bot"><span class="code-line"><span class="tok-kw">import</span> asyncio</span>
+<span class="code-line"><span class="tok-kw">from</span> aiogram <span class="tok-kw">import</span> Bot, Dispatcher</span>
+<span class="code-line"><span class="tok-kw">from</span> config <span class="tok-kw">import</span> BOT_TOKEN</span>
+<span class="code-line"><span class="tok-kw">from</span> handlers <span class="tok-kw">import</span> router</span>
+<span class="code-line"></span>
+<span class="code-line">bot = Bot(token=BOT_TOKEN)</span>
+<span class="code-line">dp = Dispatcher()</span>
+<span class="code-line">dp.include_router(router)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">main</span>():</span>
+<span class="code-line">    <span class="tok-kw">await</span> dp.start_polling(bot)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-kw">if</span> __name__ == <span class="tok-str">"__main__"</span>:</span>
+<span class="code-line">    asyncio.run(main())</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-com"># запуск: python bot.py</span></span>
+<span class="code-line"><span class="tok-com"># бот начнёт отвечать в Telegram</span></span></div>
+            <div class="code-file" data-file="handlers" style="display:none"><span class="code-line"><span class="tok-kw">from</span> aiogram <span class="tok-kw">import</span> Router, types</span>
 <span class="code-line"><span class="tok-kw">from</span> aiogram.filters <span class="tok-kw">import</span> Command</span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-com"># инициализация бота</span></span>
-<span class="code-line">bot = Bot(token=<span class="tok-str">"BOT_TOKEN"</span>)</span>
-<span class="code-line">dp = Dispatcher()</span>
+<span class="code-line">router = Router()</span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-dec">@dp.message</span>(Command(<span class="tok-str">"start"</span>))</span>
+<span class="code-line"><span class="tok-dec">@router.message</span>(Command(<span class="tok-str">"start"</span>))</span>
 <span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">start_handler</span>(msg: types.Message):</span>
 <span class="code-line">    <span class="tok-kw">await</span> msg.answer(</span>
-<span class="code-line">        <span class="tok-str">"Привет! Я помогу"</span></span>
+<span class="code-line">        <span class="tok-str">"Привет! Помогу"</span></span>
 <span class="code-line">        <span class="tok-str">"с бронированием ☕️"</span></span>
 <span class="code-line">    )</span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-dec">@dp.message</span>(Command(<span class="tok-str">"book"</span>))</span>
+<span class="code-line"><span class="tok-dec">@router.message</span>(Command(<span class="tok-str">"book"</span>))</span>
 <span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">book_handler</span>(msg: types.Message):</span>
 <span class="code-line">    slots = get_slots()</span>
 <span class="code-line">    <span class="tok-kw">await</span> msg.answer(</span>
@@ -907,97 +1149,164 @@ footer{
 <span class="code-line">        reply_markup=kb(slots)</span>
 <span class="code-line">    )</span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-kw">def</span> <span class="tok-fn">get_slots</span>():</span>
-<span class="code-line">    <span class="tok-kw">return</span> [<span class="tok-str">"10:00"</span>, <span class="tok-str">"12:30"</span>, <span class="tok-str">"15:00"</span>]</span>
-<span class="code-line"></span>
-<span class="code-line"><span class="tok-dec">@dp.callback_query</span>()</span>
+<span class="code-line"><span class="tok-dec">@router.callback_query</span>()</span>
 <span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">confirm</span>(call: types.CallbackQuery):</span>
-<span class="code-line">    <span class="tok-kw">await</span> save_booking(call.from_user.id)</span>
 <span class="code-line">    <span class="tok-kw">await</span> call.answer(</span>
 <span class="code-line">        <span class="tok-str">"Бронь подтверждена ✅"</span></span>
-<span class="code-line">    )</span>
+<span class="code-line">    )</span></div>
+            <div class="code-file" data-file="config" style="display:none"><span class="code-line"><span class="tok-kw">import</span> os</span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">notify_admin</span>(text: <span class="tok-def">str</span>):</span>
-<span class="code-line">    <span class="tok-kw">await</span> bot.send_message(</span>
-<span class="code-line">        ADMIN_ID, text</span>
-<span class="code-line">    )</span>
+<span class="code-line">BOT_TOKEN = os.getenv(<span class="tok-str">"BOT_TOKEN"</span>)</span>
+<span class="code-line">ADMIN_ID = <span class="tok-num">123456789</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">main</span>():</span>
-<span class="code-line">    <span class="tok-kw">await</span> dp.start_polling(bot)</span>
+<span class="code-line">DB_URL = <span class="tok-str">"sqlite:///bookings.db"</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="tok-kw">if</span> __name__ == <span class="tok-str">"__main__"</span>:</span>
-<span class="code-line">    asyncio.run(main())</span>
-</div>
-      <div class="code-cursor"></div>
-    </div>
-  </div>
-</div>
- 
-<!-- RIGHT SIDE PANEL - WEBSITE BUILDER -->
-<div class="side-panel side-panel-right" id="sitePanel">
-  <div class="panel-window">
-    <div class="panel-titlebar">
-      <span class="tl-dot r"></span><span class="tl-dot y"></span><span class="tl-dot g"></span>
-      <span class="panel-filename">yoursite.ru</span>
-    </div>
-    <div class="site-body">
-      <div class="site-scroll" id="siteScroll">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <div class="skel" style="width:22px;height:22px;border-radius:6px;"></div>
-          <div class="skel" style="width:34px;height:8px;"></div>
-          <div class="skel" style="width:34px;height:8px;"></div>
-          <div class="skel" style="width:34px;height:8px;margin-left:auto;"></div>
+<span class="code-line">WORK_HOURS = {</span>
+<span class="code-line">    <span class="tok-str">"start"</span>: <span class="tok-str">"09:00"</span>,</span>
+<span class="code-line">    <span class="tok-str">"end"</span>: <span class="tok-str">"21:00"</span>,</span>
+<span class="code-line">}</span>
+<span class="code-line"></span>
+<span class="code-line">SLOT_STEP_MIN = <span class="tok-num">30</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-com"># переменные окружения</span></span>
+<span class="code-line"><span class="tok-com"># задаются на сервере</span></span></div>
+          </div>
+          <div class="code-cursor"></div>
         </div>
-        <div class="skel" style="width:100%;height:90px;"></div>
-        <div class="skel" style="width:80%;height:11px;"></div>
-        <div class="skel" style="width:55%;height:11px;"></div>
-        <div class="skel" style="width:70px;height:22px;border-radius:999px;margin-top:4px;"></div>
- 
-        <div style="height:8px;"></div>
-        <div class="skel" style="width:40%;height:10px;"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div class="skel" style="height:56px;"></div>
-          <div class="skel" style="height:56px;"></div>
-          <div class="skel" style="height:56px;"></div>
-          <div class="skel" style="height:56px;"></div>
-        </div>
- 
-        <div style="height:8px;"></div>
-        <div class="skel" style="width:45%;height:10px;"></div>
-        <div class="skel" style="width:100%;height:14px;"></div>
-        <div class="skel" style="width:100%;height:14px;"></div>
-        <div class="skel" style="width:100%;height:40px;"></div>
-        <div class="skel" style="width:90px;height:24px;border-radius:999px;"></div>
- 
-        <div style="height:10px;"></div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <div class="skel" style="width:22px;height:22px;border-radius:6px;"></div>
-          <div class="skel" style="width:34px;height:8px;"></div>
-          <div class="skel" style="width:34px;height:8px;"></div>
-        </div>
-        <div class="skel" style="width:100%;height:90px;"></div>
-        <div class="skel" style="width:60%;height:11px;"></div>
-        <div class="skel" style="width:80px;height:22px;border-radius:999px;"></div>
       </div>
-      <svg class="site-cursor" viewBox="0 0 24 24" fill="none">
-        <path d="M4 3l14 7-6 2-2 6-6-15z" fill="#1e97d6" stroke="#fff" stroke-width="1"/>
-      </svg>
     </div>
   </div>
 </div>
+ 
+<!-- RIGHT SIDE PANEL — WEBSITE BUILDER (interactive, tabbed) -->
+<div class="side-panel side-panel-right" id="sitePanel">
+  <div class="panel-tilt" id="siteTilt">
+    <div class="panel-scale">
+      <div class="panel-window" id="siteWindow" tabindex="0" aria-label="Пример сайта, кликните вкладки, чтобы переключить страницу">
+        <div class="panel-titlebar">
+          <span class="tl-dot r"></span><span class="tl-dot y"></span><span class="tl-dot g"></span>
+          <span class="panel-filename">пример сайта</span>
+        </div>
+        <div class="panel-tabs site-panel-tabs" id="siteTabs">
+          <button class="panel-tab active" data-page="home">Главная</button>
+          <button class="panel-tab" data-page="catalog">Каталог</button>
+          <button class="panel-tab" data-page="contact">Контакты</button>
+        </div>
+        <div class="site-body">
+          <div class="site-scroll" id="siteScroll">
+ 
+            <div class="site-page" data-page="home" style="display:flex;flex-direction:column;gap:9px;">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div class="skel" style="width:20px;height:20px;border-radius:6px;"></div>
+                <span class="mock-sub" style="font-size:8px;">Главная</span>
+                <span class="mock-sub" style="font-size:8px;">Услуги</span>
+                <span class="mock-sub" style="font-size:8px;margin-left:auto;">Контакты</span>
+              </div>
+              <div class="skel" style="width:100%;height:70px;"></div>
+              <div class="mock-label" style="font-size:14px;">Боты и сайты на заказ</div>
+              <div class="mock-sub" style="font-size:9px;">Идеи, которые оживают в коде</div>
+              <div class="mock-btn" style="width:110px;height:24px;font-size:9.5px;margin-top:2px;">Оставить заявку</div>
+ 
+              <div style="height:4px;"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div class="mock-card" style="height:54px;padding:8px;">
+                  <span class="mock-chip" style="width:20px;height:20px;font-size:11px;">🤖</span>
+                  <span class="mock-sub" style="font-size:8px;">Боты</span>
+                </div>
+                <div class="mock-card" style="height:54px;padding:8px;">
+                  <span class="mock-chip" style="width:20px;height:20px;font-size:11px;">🖥️</span>
+                  <span class="mock-sub" style="font-size:8px;">Сайты</span>
+                </div>
+                <div class="mock-card" style="height:54px;padding:8px;">
+                  <span class="mock-chip" style="width:20px;height:20px;font-size:11px;">⚡</span>
+                  <span class="mock-sub" style="font-size:8px;">Быстро</span>
+                </div>
+                <div class="mock-card" style="height:54px;padding:8px;">
+                  <span class="mock-chip" style="width:20px;height:20px;font-size:11px;">🛠️</span>
+                  <span class="mock-sub" style="font-size:8px;">Поддержка</span>
+                </div>
+              </div>
+            </div>
+ 
+            <div class="site-page" data-page="catalog" style="display:none;flex-direction:column;gap:9px;">
+              <div class="mock-label" style="font-size:12px;">Примеры проектов</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div class="mock-card" style="height:78px;padding:0;overflow:hidden;">
+                  <div class="skel" style="width:100%;height:44px;border-radius:10px 10px 0 0;"></div>
+                  <div style="padding:6px 8px;">
+                    <div class="mock-sub" style="font-size:8px;">Кофейня</div>
+                    <span class="mock-chip" style="font-size:7px;padding:2px 6px;height:auto;width:auto;">бот</span>
+                  </div>
+                </div>
+                <div class="mock-card" style="height:78px;padding:0;overflow:hidden;">
+                  <div class="skel" style="width:100%;height:44px;border-radius:10px 10px 0 0;"></div>
+                  <div style="padding:6px 8px;">
+                    <div class="mock-sub" style="font-size:8px;">Студия</div>
+                    <span class="mock-chip" style="font-size:7px;padding:2px 6px;height:auto;width:auto;">сайт</span>
+                  </div>
+                </div>
+                <div class="mock-card" style="height:78px;padding:0;overflow:hidden;">
+                  <div class="skel" style="width:100%;height:44px;border-radius:10px 10px 0 0;"></div>
+                  <div style="padding:6px 8px;">
+                    <div class="mock-sub" style="font-size:8px;">Поддержка</div>
+                    <span class="mock-chip" style="font-size:7px;padding:2px 6px;height:auto;width:auto;">бот</span>
+                  </div>
+                </div>
+                <div class="mock-card" style="height:78px;padding:0;overflow:hidden;">
+                  <div class="skel" style="width:100%;height:44px;border-radius:10px 10px 0 0;"></div>
+                  <div style="padding:6px 8px;">
+                    <div class="mock-sub" style="font-size:8px;">Магазин</div>
+                    <span class="mock-chip" style="font-size:7px;padding:2px 6px;height:auto;width:auto;">сайт</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mock-sub" style="font-size:8px;">+ ещё проекты по запросу</div>
+            </div>
+ 
+            <div class="site-page" data-page="contact" style="display:none;flex-direction:column;gap:10px;">
+              <div class="mock-label" style="font-size:12px;">Оставить заявку</div>
+              <div>
+                <div class="mock-sub" style="font-size:7.5px;margin-bottom:3px;">Имя</div>
+                <div class="mock-input" style="height:22px;padding:0 8px;font-size:8px;">Александр</div>
+              </div>
+              <div>
+                <div class="mock-sub" style="font-size:7.5px;margin-bottom:3px;">Telegram</div>
+                <div class="mock-input" style="height:22px;padding:0 8px;font-size:8px;">@username</div>
+              </div>
+              <div>
+                <div class="mock-sub" style="font-size:7.5px;margin-bottom:3px;">Сообщение</div>
+                <div class="mock-input" style="height:44px;padding:6px 8px;font-size:8px;align-items:flex-start;">Расскажите о задаче…</div>
+              </div>
+              <div class="mock-btn" style="width:100px;height:24px;font-size:9.5px;">Отправить</div>
+              <div style="display:flex;gap:6px;margin-top:2px;">
+                <span class="mock-chip" style="width:22px;height:22px;font-size:11px;">✈️</span>
+                <span class="mock-chip" style="width:22px;height:22px;font-size:11px;">✓</span>
+              </div>
+            </div>
+ 
+          </div>
+          <svg class="site-cursor" viewBox="0 0 24 24" fill="none">
+            <path d="M4 3l14 7-6 2-2 6-6-15z" stroke="#fff" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
  
 <!-- HERO -->
 <section id="hero">
   <div class="wrap hero-inner">
     <span class="hero-kicker hero-anim" style="animation-delay:.05s">Telegram-боты и сайты на заказ</span>
     <h1 class="hero-title hero-anim" style="animation-delay:.18s">Идеи, которые оживают в коде</h1>
-    <p class="hero-sub hero-anim" style="animation-delay:.32s">Разрабатываю Telegram-ботов и сайты - от первого сообщения до готового продукта, которым приятно пользоваться каждый день.</p>
+    <p class="hero-sub hero-anim" style="animation-delay:.32s">Разрабатываю Telegram-ботов и сайты — от первого сообщения до готового продукта, которым приятно пользоваться каждый день.</p>
     <div class="hero-actions hero-anim" style="animation-delay:.46s">
       <button class="btn btn-primary" data-target="work">Смотреть работы</button>
       <button class="btn btn-ghost" data-target="contact">Обсудить проект</button>
     </div>
   </div>
-  <div class="hero-scroll hero-anim" style="animation-delay:.6s"><span class="scroll-line"></span> </div>
+  <div class="hero-scroll hero-anim" style="animation-delay:.6s"><span class="scroll-line"></span> Листайте вниз</div>
 </section>
  
 <!-- WORK -->
@@ -1005,14 +1314,14 @@ footer{
   <div class="wrap">
     <div class="section-head">
       <h2 class="section-title">Чем я занимаюсь</h2>
-      <p class="section-desc">Две основные вещи, которые я делаю по-настоящему хорошо - и на которых сфокусирована вся моя работа.</p>
+      <p class="section-desc">Две основные вещи, которые я делаю по-настоящему хорошо — и на которых сфокусирована вся моя работа.</p>
     </div>
  
     <div class="service-grid">
       <div class="service-card glass">
         <div class="service-icon">🤖</div>
         <h3>Telegram-боты</h3>
-        <p>Боты для продаж, записи, поддержки клиентов, рассылок и автоматизации внутренних процессов - с админ-панелью и интеграциями, которые нужны именно вам.</p>
+        <p>Боты для продаж, записи, поддержки клиентов, рассылок и автоматизации внутренних процессов — с админ-панелью и интеграциями, которые нужны именно вам.</p>
         <div class="service-tags">
           <span class="tag">Боты для бизнеса</span>
           <span class="tag">Приём заявок</span>
@@ -1061,7 +1370,7 @@ footer{
   <div class="wrap">
     <div class="section-head">
       <h2 class="section-title">Как проходит работа</h2>
-      <p class="section-desc">Прозрачный процесс без сюрпризов - вы всегда знаете, что происходит с проектом и что будет дальше.</p>
+      <p class="section-desc">Прозрачный процесс без сюрпризов — вы всегда знаете, что происходит с проектом и что будет дальше.</p>
     </div>
  
     <div class="process-list">
@@ -1076,7 +1385,7 @@ footer{
         <span class="step-num">2</span>
         <div class="step-body">
           <h4>Предложение и стоимость</h4>
-          <p>Формирую состав работ, сроки и стоимость - фиксируем это до старта разработки.</p>
+          <p>Формирую состав работ, сроки и стоимость — фиксируем это до старта разработки.</p>
         </div>
       </div>
       <div class="process-step glass">
@@ -1104,7 +1413,7 @@ footer{
         <span class="step-num">6</span>
         <div class="step-body">
           <h4>Поддержка</h4>
-          <p>Остаюсь на связи после запуска - дорабатываю функции и помогаю с вопросами.</p>
+          <p>Остаюсь на связи после запуска — дорабатываю функции и помогаю с вопросами.</p>
         </div>
       </div>
     </div>
@@ -1143,8 +1452,8 @@ footer{
   <div class="wrap" style="display:flex;justify-content:center;">
     <div class="contact-inner glass">
       <h2>Готовы обсудить проект?</h2>
-      <p>Расскажите, какой бот или сайт вам нужен - отвечу в Telegram и предложу, как лучше это реализовать.</p>
-      <a class="btn btn-primary tg-btn" href="https://t.me/Maximiator" target="_blank" rel="noopener">Написать в Telegram</a>
+      <p>Расскажите, какой бот или сайт вам нужен — отвечу в Telegram и предложу, как лучше это реализовать.</p>
+      <a class="btn btn-primary tg-btn" href="https://t.me/your_username" target="_blank" rel="noopener">Написать в Telegram</a>
     </div>
   </div>
 </section>
@@ -1167,6 +1476,7 @@ function getPreferredTheme(){
 function applyTheme(theme){
   root.setAttribute('data-theme', theme);
   try{ localStorage.setItem('portfolio-theme', theme); }catch(e){}
+  if(themeBtn) themeBtn.setAttribute('aria-checked', theme === 'dark' ? 'true' : 'false');
 }
  
 applyTheme(getPreferredTheme());
@@ -1176,11 +1486,13 @@ themeBtn.addEventListener('click', ()=>{
   applyTheme(next);
 });
  
-// ---------- SIDE PANELS: reveal + scroll-linked movement ----------
+// ---------- SIDE PANELS: reveal, tabs, tilt, scroll-linked movement ----------
 const codePanel = document.getElementById('codePanel');
 const sitePanel = document.getElementById('sitePanel');
 const codeScroll = document.getElementById('codeScroll');
 const siteScroll = document.getElementById('siteScroll');
+const codeBody = codePanel ? codePanel.querySelector('.code-body') : null;
+const siteBody = sitePanel ? sitePanel.querySelector('.site-body') : null;
  
 setTimeout(()=>{
   if(codePanel) codePanel.classList.add('in');
@@ -1191,18 +1503,69 @@ function updateSidePanels(){
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
   const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
  
-  if(codeScroll && codePanel){
-    const range = Math.max(codeScroll.scrollHeight - codePanel.clientHeight, 0);
+  if(codeScroll && codeBody){
+    const range = Math.max(codeScroll.scrollHeight - codeBody.clientHeight, 0);
     codeScroll.style.transform = `translateY(${-progress * range}px)`;
   }
-  if(siteScroll && sitePanel){
-    const range2 = Math.max(siteScroll.scrollHeight - sitePanel.clientHeight, 0);
+  if(siteScroll && siteBody){
+    const range2 = Math.max(siteScroll.scrollHeight - siteBody.clientHeight, 0);
     siteScroll.style.transform = `translateY(${-progress * range2}px)`;
   }
 }
 window.addEventListener('scroll', updateSidePanels, {passive:true});
 window.addEventListener('resize', updateSidePanels);
 updateSidePanels();
+ 
+// ---- tab switching (code files) ----
+const codeTabs = document.getElementById('codeTabs');
+if(codeTabs){
+  codeTabs.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.panel-tab');
+    if(!btn) return;
+    codeTabs.querySelectorAll('.panel-tab').forEach(t=>t.classList.toggle('active', t===btn));
+    codeScroll.querySelectorAll('.code-file').forEach(f=>{
+      f.style.display = (f.dataset.file === btn.dataset.file) ? '' : 'none';
+    });
+    codeScroll.style.transform = 'translateY(0)';
+    requestAnimationFrame(updateSidePanels);
+  });
+}
+ 
+// ---- tab switching (site pages) ----
+const siteTabs = document.getElementById('siteTabs');
+if(siteTabs){
+  siteTabs.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.panel-tab');
+    if(!btn) return;
+    siteTabs.querySelectorAll('.panel-tab').forEach(t=>t.classList.toggle('active', t===btn));
+    siteScroll.querySelectorAll('.site-page').forEach(p=>{
+      p.style.display = (p.dataset.page === btn.dataset.page) ? 'flex' : 'none';
+    });
+    siteScroll.style.transform = 'translateY(0)';
+    requestAnimationFrame(updateSidePanels);
+  });
+}
+ 
+// ---- pointer tilt (desktop only, fine pointer + hover-capable) ----
+const canTilt = window.matchMedia('(hover:hover) and (pointer:fine)').matches
+  && !window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+ 
+function attachTilt(panelEl, tiltEl){
+  if(!panelEl || !tiltEl || !canTilt) return;
+  panelEl.addEventListener('mousemove', (e)=>{
+    const rect = panelEl.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    const rotY = px * 14;
+    const rotX = -py * 14;
+    tiltEl.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.02)`;
+  });
+  panelEl.addEventListener('mouseleave', ()=>{
+    tiltEl.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)';
+  });
+}
+attachTilt(codePanel, document.getElementById('codeTilt'));
+attachTilt(sitePanel, document.getElementById('siteTilt'));
  
 // ---------- REVEAL ON SCROLL (cards, steps, headers) ----------
 const revealTargets = document.querySelectorAll(
@@ -1224,22 +1587,41 @@ const revealObserver = new IntersectionObserver((entries)=>{
  
 revealTargets.forEach(el=>revealObserver.observe(el));
  
+ 
 // ---------- NAV DOCK ----------
 const sections = ['hero','work','process','reviews','contact'];
 const dockItems = document.querySelectorAll('.dock-item');
 const navButtons = document.querySelectorAll('[data-target]');
+const dockIndicator = document.getElementById('dockIndicator');
+const dockEl = document.querySelector('.dock');
  
 navButtons.forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const target = document.getElementById(btn.dataset.target);
-    if(target) target.scrollIntoView({behavior:'smooth'});
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
   });
 });
  
+function moveDockIndicator(activeItem){
+  if(!dockIndicator || !dockEl || !activeItem) return;
+  const itemRect = activeItem.getBoundingClientRect();
+  const dockRect = dockEl.getBoundingClientRect();
+  const x = itemRect.left - dockRect.left;
+  const y = itemRect.top - dockRect.top;
+  dockIndicator.style.width = itemRect.width + 'px';
+  dockIndicator.style.height = itemRect.height + 'px';
+  dockIndicator.style.transform = `translate(${x}px, ${y}px)`;
+  dockIndicator.classList.add('ready');
+}
+ 
 function setActiveDock(id){
+  let activeItem = null;
   dockItems.forEach(item=>{
-    item.classList.toggle('active', item.dataset.target === id);
+    const isActive = item.dataset.target === id;
+    item.classList.toggle('active', isActive);
+    if(isActive) activeItem = item;
   });
+  if(activeItem) moveDockIndicator(activeItem);
 }
  
 const observer = new IntersectionObserver((entries)=>{
@@ -1268,7 +1650,7 @@ const reviews = [
     role:"основатель студии"
   },
   {
-    quote:"После запуска бота количество однотипных вопросов в переписке сократилось в разы - команда наконец выдохнула.",
+    quote:"После запуска бота количество однотипных вопросов в переписке сократилось в разы — команда наконец выдохнула.",
     name:"Анна",
     role:"руководитель поддержки"
   },
