@@ -217,7 +217,9 @@ h1,h2,h3,p{margin:0;}
   box-shadow:var(--shadow-glass), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .dock-indicator{
-  display: none;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
   position:absolute;
   top:0;
   left:0;
@@ -536,8 +538,8 @@ h1,h2,h3,p{margin:0;}
   flex:1;
   overflow:hidden;
   position:relative;
-  background:#eef3f7;
-  color: var(--ink);
+  background: var(--bg-0);
+  color: var(--ink) !important;
 }
 :root[data-theme="dark"] .site-body{background:#16222e;}
 .site-scroll{
