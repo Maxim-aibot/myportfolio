@@ -8,19 +8,21 @@
  
 /* ============ TOKENS ============ */
 :root{
-  --bg-0:#dfe9f0;
-  --bg-1:#cddfea;
+  --bg-0:#eef2f1;
+  --bg-1:#e2ebe9;
   --glass:rgba(255,255,255,0.40);
   --glass-strong:rgba(255,255,255,0.60);
   --glass-border:rgba(255,255,255,0.55);
-  --ink:#152230;
-  --ink-soft:#4c6072;
-  --ink-faint:#7c8f9e;
-  --accent:#1e97d6;
-  --accent-2:#7285e8;
-  --accent-3:#5cc9bc;
+  --ink:#16221f;
+  --ink-soft:#4a5f5a;
+  --ink-faint:#7c9490;
+  --accent:#14A98D;
+  --accent-2:#3F8FE0;
+  --accent-3:#5CD9BE;
+  --accent-rgb:20,169,141;
+  --accent2-rgb:63,143,224;
   --shadow-glass:0 8px 32px rgba(20,45,66,0.16);
-  --blob-opacity:0.42;
+  --blob-opacity:0.38;
   --radius-lg:28px;
   --radius-md:20px;
   --radius-sm:14px;
@@ -28,19 +30,21 @@
 }
  
 :root[data-theme="dark"]{
-  --bg-0:#0b141e;
-  --bg-1:#0e1c29;
+  --bg-0:#1E1E1E;
+  --bg-1:#181818;
   --glass:rgba(255,255,255,0.055);
   --glass-strong:rgba(255,255,255,0.10);
-  --glass-border:rgba(255,255,255,0.14);
-  --ink:#e9f1f8;
-  --ink-soft:#9db0c1;
-  --ink-faint:#63768a;
-  --accent:#3cb6f0;
-  --accent-2:#8aa0ff;
-  --accent-3:#63d9c9;
+  --glass-border:rgba(47,214,181,0.16);
+  --ink:#2FD6B5;
+  --ink-soft:#8fc4b9;
+  --ink-faint:#5c7a73;
+  --accent:#2FD6B5;
+  --accent-2:#4FA6E0;
+  --accent-3:#6EE7C0;
+  --accent-rgb:47,214,181;
+  --accent2-rgb:79,166,224;
   --shadow-glass:0 8px 36px rgba(0,0,0,0.5);
-  --blob-opacity:0.32;
+  --blob-opacity:0.24;
   color-scheme:dark;
 }
  
@@ -270,7 +274,161 @@ h1,h2,h3,p{margin:0;}
   }
 }
  
-/* ============ SECTIONS ============ */
+/* ============ SIDE SHOWCASE PANELS ============ */
+.side-panel{
+  position:fixed;
+  top:50%;
+  width:230px;
+  height:440px;
+  z-index:2;
+  pointer-events:none;
+  opacity:0;
+  display:none;
+  transition:opacity .9s ease, transform .9s ease;
+}
+@media (min-width:1680px){
+  .side-panel{display:block;}
+}
+.side-panel-left{
+  left:36px;
+  transform:translateY(-50%) translateX(-18px) rotate(-2deg);
+}
+.side-panel-left.in{
+  opacity:1;
+  transform:translateY(-50%) translateX(0) rotate(-2deg);
+}
+.side-panel-right{
+  right:36px;
+  transform:translateY(-50%) translateX(18px) rotate(2deg);
+}
+.side-panel-right.in{
+  opacity:1;
+  transform:translateY(-50%) translateX(0) rotate(2deg);
+}
+.panel-window{
+  width:100%;
+  height:100%;
+  border-radius:16px;
+  overflow:hidden;
+  background:var(--glass-strong);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:var(--shadow-glass);
+  display:flex;
+  flex-direction:column;
+  transition:background .5s ease, border-color .5s ease;
+}
+.panel-titlebar{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 12px;
+  background:rgba(0,0,0,0.045);
+  border-bottom:1px solid var(--glass-border);
+  flex-shrink:0;
+}
+:root[data-theme="dark"] .panel-titlebar{background:rgba(255,255,255,0.035);}
+.tl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.tl-dot.r{background:#ff5f57;}
+.tl-dot.y{background:#febc2e;}
+.tl-dot.g{background:#28c840;}
+.panel-filename{
+  margin-left:6px;
+  font-size:11px;
+  font-weight:600;
+  color:var(--ink-soft);
+  font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+ 
+/* ---- code editor mockup ---- */
+.code-body{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+  background:#111820;
+}
+.code-scroll{
+  position:absolute;
+  left:0;right:0;top:0;
+  padding:16px 14px 200px;
+  font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  font-size:10.5px;
+  line-height:1.85;
+  will-change:transform;
+}
+.code-line{white-space:pre;}
+.tok-kw{color:#c586f0;}
+.tok-fn{color:#7fc6ff;}
+.tok-str{color:#95d68a;}
+.tok-com{color:#67788a;}
+.tok-num{color:#e6b567;}
+.tok-def{color:#e9f1f8;}
+.tok-dec{color:#e39a5c;}
+.code-cursor{
+  position:absolute;
+  bottom:18px;
+  left:16px;
+  width:6px;
+  height:13px;
+  background:#3cb6f0;
+  animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+ 
+/* ---- site builder mockup ---- */
+.site-body{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+  background:#eef3f7;
+}
+:root[data-theme="dark"] .site-body{background:#16222e;}
+.site-scroll{
+  position:absolute;
+  left:0;right:0;top:0;
+  padding:14px;
+  padding-bottom:200px;
+  will-change:transform;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.skel{
+  border-radius:7px;
+  background:linear-gradient(100deg, rgba(110,145,180,0.16) 20%, rgba(110,145,180,0.34) 40%, rgba(110,145,180,0.16) 60%);
+  background-size:220% 100%;
+  animation:shimmer 2.6s ease-in-out infinite;
+}
+:root[data-theme="dark"] .skel{
+  background:linear-gradient(100deg, rgba(180,200,220,0.10) 20%, rgba(180,200,220,0.22) 40%, rgba(180,200,220,0.10) 60%);
+  background-size:220% 100%;
+}
+@keyframes shimmer{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
+}
+.site-cursor{
+  position:absolute;
+  width:15px;
+  z-index:3;
+  animation:cursorMove 7s ease-in-out infinite;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+}
+@keyframes cursorMove{
+  0%{transform:translate(40px,50px);}
+  22%{transform:translate(150px,110px);}
+  48%{transform:translate(70px,260px);}
+  74%{transform:translate(160px,360px);}
+  100%{transform:translate(40px,50px);}
+}
+ 
+@media (prefers-reduced-motion:reduce){
+  .code-cursor,.skel,.site-cursor{animation:none !important;}
+}
 section{
   position:relative;
   z-index:1;
@@ -718,6 +876,116 @@ footer{
   </button>
 </nav>
  
+<!-- LEFT SIDE PANEL — TELEGRAM BOT CODE -->
+<div class="side-panel side-panel-left" id="codePanel">
+  <div class="panel-window">
+    <div class="panel-titlebar">
+      <span class="tl-dot r"></span><span class="tl-dot y"></span><span class="tl-dot g"></span>
+      <span class="panel-filename">bot.py</span>
+    </div>
+    <div class="code-body">
+      <div class="code-scroll" id="codeScroll"><span class="code-line"><span class="tok-kw">import</span> asyncio</span>
+<span class="code-line"><span class="tok-kw">from</span> aiogram <span class="tok-kw">import</span> Bot, Dispatcher, types</span>
+<span class="code-line"><span class="tok-kw">from</span> aiogram.filters <span class="tok-kw">import</span> Command</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-com"># инициализация бота</span></span>
+<span class="code-line">bot = Bot(token=<span class="tok-str">"BOT_TOKEN"</span>)</span>
+<span class="code-line">dp = Dispatcher()</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-dec">@dp.message</span>(Command(<span class="tok-str">"start"</span>))</span>
+<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">start_handler</span>(msg: types.Message):</span>
+<span class="code-line">    <span class="tok-kw">await</span> msg.answer(</span>
+<span class="code-line">        <span class="tok-str">"Привет! Я помогу"</span></span>
+<span class="code-line">        <span class="tok-str">"с бронированием ☕️"</span></span>
+<span class="code-line">    )</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-dec">@dp.message</span>(Command(<span class="tok-str">"book"</span>))</span>
+<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">book_handler</span>(msg: types.Message):</span>
+<span class="code-line">    slots = get_slots()</span>
+<span class="code-line">    <span class="tok-kw">await</span> msg.answer(</span>
+<span class="code-line">        <span class="tok-str">"Выберите время:"</span>,</span>
+<span class="code-line">        reply_markup=kb(slots)</span>
+<span class="code-line">    )</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-kw">def</span> <span class="tok-fn">get_slots</span>():</span>
+<span class="code-line">    <span class="tok-kw">return</span> [<span class="tok-str">"10:00"</span>, <span class="tok-str">"12:30"</span>, <span class="tok-str">"15:00"</span>]</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-dec">@dp.callback_query</span>()</span>
+<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">confirm</span>(call: types.CallbackQuery):</span>
+<span class="code-line">    <span class="tok-kw">await</span> save_booking(call.from_user.id)</span>
+<span class="code-line">    <span class="tok-kw">await</span> call.answer(</span>
+<span class="code-line">        <span class="tok-str">"Бронь подтверждена ✅"</span></span>
+<span class="code-line">    )</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">notify_admin</span>(text: <span class="tok-def">str</span>):</span>
+<span class="code-line">    <span class="tok-kw">await</span> bot.send_message(</span>
+<span class="code-line">        ADMIN_ID, text</span>
+<span class="code-line">    )</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-kw">async</span> <span class="tok-kw">def</span> <span class="tok-fn">main</span>():</span>
+<span class="code-line">    <span class="tok-kw">await</span> dp.start_polling(bot)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="tok-kw">if</span> __name__ == <span class="tok-str">"__main__"</span>:</span>
+<span class="code-line">    asyncio.run(main())</span>
+</div>
+      <div class="code-cursor"></div>
+    </div>
+  </div>
+</div>
+ 
+<!-- RIGHT SIDE PANEL — WEBSITE BUILDER -->
+<div class="side-panel side-panel-right" id="sitePanel">
+  <div class="panel-window">
+    <div class="panel-titlebar">
+      <span class="tl-dot r"></span><span class="tl-dot y"></span><span class="tl-dot g"></span>
+      <span class="panel-filename">yoursite.ru</span>
+    </div>
+    <div class="site-body">
+      <div class="site-scroll" id="siteScroll">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="skel" style="width:22px;height:22px;border-radius:6px;"></div>
+          <div class="skel" style="width:34px;height:8px;"></div>
+          <div class="skel" style="width:34px;height:8px;"></div>
+          <div class="skel" style="width:34px;height:8px;margin-left:auto;"></div>
+        </div>
+        <div class="skel" style="width:100%;height:90px;"></div>
+        <div class="skel" style="width:80%;height:11px;"></div>
+        <div class="skel" style="width:55%;height:11px;"></div>
+        <div class="skel" style="width:70px;height:22px;border-radius:999px;margin-top:4px;"></div>
+ 
+        <div style="height:8px;"></div>
+        <div class="skel" style="width:40%;height:10px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="skel" style="height:56px;"></div>
+          <div class="skel" style="height:56px;"></div>
+          <div class="skel" style="height:56px;"></div>
+          <div class="skel" style="height:56px;"></div>
+        </div>
+ 
+        <div style="height:8px;"></div>
+        <div class="skel" style="width:45%;height:10px;"></div>
+        <div class="skel" style="width:100%;height:14px;"></div>
+        <div class="skel" style="width:100%;height:14px;"></div>
+        <div class="skel" style="width:100%;height:40px;"></div>
+        <div class="skel" style="width:90px;height:24px;border-radius:999px;"></div>
+ 
+        <div style="height:10px;"></div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="skel" style="width:22px;height:22px;border-radius:6px;"></div>
+          <div class="skel" style="width:34px;height:8px;"></div>
+          <div class="skel" style="width:34px;height:8px;"></div>
+        </div>
+        <div class="skel" style="width:100%;height:90px;"></div>
+        <div class="skel" style="width:60%;height:11px;"></div>
+        <div class="skel" style="width:80px;height:22px;border-radius:999px;"></div>
+      </div>
+      <svg class="site-cursor" viewBox="0 0 24 24" fill="none">
+        <path d="M4 3l14 7-6 2-2 6-6-15z" fill="#1e97d6" stroke="#fff" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+</div>
+ 
 <!-- HERO -->
 <section id="hero">
   <div class="wrap hero-inner">
@@ -729,7 +997,7 @@ footer{
       <button class="btn btn-ghost" data-target="contact">Обсудить проект</button>
     </div>
   </div>
-  <div class="hero-scroll hero-anim" style="animation-delay:.6s"><span class="scroll-line"></span> </div>
+  <div class="hero-scroll hero-anim" style="animation-delay:.6s"><span class="scroll-line"></span> Листайте вниз</div>
 </section>
  
 <!-- WORK -->
@@ -876,7 +1144,7 @@ footer{
     <div class="contact-inner glass">
       <h2>Готовы обсудить проект?</h2>
       <p>Расскажите, какой бот или сайт вам нужен — отвечу в Telegram и предложу, как лучше это реализовать.</p>
-      <a class="btn btn-primary tg-btn" href="https://t.me/maximiator" target="_blank" rel="noopener">Написать в Telegram</a>
+      <a class="btn btn-primary tg-btn" href="https://t.me/your_username" target="_blank" rel="noopener">Написать в Telegram</a>
     </div>
   </div>
 </section>
@@ -907,6 +1175,54 @@ themeBtn.addEventListener('click', ()=>{
   const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   applyTheme(next);
 });
+ 
+// ---------- SIDE PANELS: reveal + scroll-linked movement ----------
+const codePanel = document.getElementById('codePanel');
+const sitePanel = document.getElementById('sitePanel');
+const codeScroll = document.getElementById('codeScroll');
+const siteScroll = document.getElementById('siteScroll');
+ 
+setTimeout(()=>{
+  if(codePanel) codePanel.classList.add('in');
+  if(sitePanel) sitePanel.classList.add('in');
+}, 700);
+ 
+function updateSidePanels(){
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
+ 
+  if(codeScroll && codePanel){
+    const range = Math.max(codeScroll.scrollHeight - codePanel.clientHeight, 0);
+    codeScroll.style.transform = `translateY(${-progress * range}px)`;
+  }
+  if(siteScroll && sitePanel){
+    const range2 = Math.max(siteScroll.scrollHeight - sitePanel.clientHeight, 0);
+    siteScroll.style.transform = `translateY(${-progress * range2}px)`;
+  }
+}
+window.addEventListener('scroll', updateSidePanels, {passive:true});
+window.addEventListener('resize', updateSidePanels);
+updateSidePanels();
+ 
+// ---------- REVEAL ON SCROLL (cards, steps, headers) ----------
+const revealTargets = document.querySelectorAll(
+  '.section-head, .service-card, .project-card, .process-step, .reviews-wrap, .review-dots, .contact-inner'
+);
+revealTargets.forEach((el,i)=>{
+  el.classList.add('reveal');
+  el.style.transitionDelay = (i % 4) * 80 + 'ms';
+});
+ 
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+},{ threshold:0.15, rootMargin:'0px 0px -60px 0px' });
+ 
+revealTargets.forEach(el=>revealObserver.observe(el));
  
 // ---------- NAV DOCK ----------
 const sections = ['hero','work','process','reviews','contact'];
@@ -1005,3 +1321,4 @@ document.getElementById('reviewDown').addEventListener('click', ()=>{
  
 </body>
 </html>
+ 
